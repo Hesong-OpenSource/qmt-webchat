@@ -1,0 +1,12 @@
+{
+	"name" : "qmt-webchat-server",
+	"version" : "0.0.1",
+	"description" : "server of Koyoo QuanMeiTi System's WebChat part",
+	"main" : "min.js",
+	"dependencies" : {
+		"express" : "*",
+		"body-parser" : "*",
+		"request" : "*",
+		"socket.io" : "*"
+	}
+}
