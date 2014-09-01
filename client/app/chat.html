@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>人工客服</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, user-scalable=no">
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles/main.css">
+    <!--<link rel="stylesheet" href="styles/main.css">-->
     <script src="bower_components/modernizr/modernizr.js"></script>
     <script src="bower_components/jquery/jquery.js"></script>
     <!-- Bootstrap -->
@@ -16,121 +16,88 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <!-- Bootstrap JavaScript -->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="emoji/qqemoji_regex.js"></script>
+    <link rel="stylesheet" href="emoji/emoji184f03.css">
 </head>
 <body>
-    <!--[if lt IE 11]>
-    <p class="browsehappy">您正在使用<strong>过时的</strong>浏览器。请 <a href="http://browsehappy.com/">升级浏览器</a> 以改善您的体验。</p>
-    <![endif]-->
-    <!--
-    <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
-    -->
-    <!-- costume style -->
-    <link rel="stylesheet" href="styles/chat.css" type="text/css" />
+<!--[if lt IE 11]>
+<p class="browsehappy">您正在使用<strong>过时的</strong>浏览器。请 <a href="http://browsehappy.com/">升级浏览器</a> 以改善您的体验。</p>
+<![endif]-->
+<!--
+<script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+-->
+<!-- costume style -->
+<link rel="stylesheet" href="styles/chat.css" type="text/css"/>
 
-    <!-- Ractive.js -->
-    <!--[if lt IE 11]>
-    <script src="bower_components/ractive/ractive-legacy.js"></script>
-    <![endif]-->
-    <!--[if gte IE 11]>
-    <script src="bower_components/ractive/ractive.js"></script>
-    <![endif]-->
-    <!--[if !IE]> -->
-    <script src="bower_components/ractive/ractive.js"></script>
-    <!-- <![endif]-->
-
-    <div id="browser-window">
-        <div id="viewport">
-            <div id="viewport-content">
-                <div id='messages_output'></div>
-                <script id='messages_template' type='text/ractive' >
+<!-- Ractive.js -->
+<!--[if lt IE 11]>
+<script src="bower_components/ractive/ractive-legacy.js"></script>
+<![endif]-->
+<!--[if gte IE 11]>
+<script src="bower_components/ractive/ractive.js"></script>
+<![endif]-->
+<!--[if !IE]> -->
+<script src="bower_components/ractive/ractive.js"></script>
+<!-- <![endif]-->
+<div class="webchat">
+    <div class="divcontent" id="divcontent">
+        <div id="browser-window">
+            <div id="viewport">
+                <div id="viewport-content">
+                    <div id='messages_output'></div>
+                    <script id='messages_template' type='text/ractive'>
                     {{#messages}}
                     <div class="bubble-container">
                         <div class="avatar avatar-{{this.side}}"><img src="{{this.avatar}}" /></div>
                         <div class="bubble bubble-{{this.side}}">{{{this.text}}}</div>
                     </div>
                     {{/list}}
-                </script>
+
+                    </script>
+                </div>
             </div>
         </div>
     </div>
+    <div style="padding: 2px;">
+        <table cellpadding="0" cellspacing="0" >
+            <tr>
+                <td style="width:52%;height: 27px;">
+                    <span class="emotion">表情</span>
+                </td>
+                <td>
+                    <div id="d_captcha">
+                        请输入验证码： <input type="text" id="t_captcha" style="width:60px;" align="right"/> <img
+                            src="/captcha"/>
+                        <input type="button" id="b_captcha" value="确定"/>
+                    </div>
+                </td>
+            </tr>
+        </table>
 
-    <form class="row row-chat" id="msgFrm">
-        <div class="input-group">
-            <input type="text" class="form-control" id="msgTxt" placeholder="Type your message" />
+    </div>
+    <div class="divform">
+        <form class="row row-chat" id="msgFrm">
 
-            <span class="input-group-btn">
-                <button type="submit" class="btn btn-primary">Send</button>
-                <input type="button" id="btn_rg" class="btn btn-default" value="人工服务"/>
-            </span>
-        </div>
-    </form>
-<!-- 
-    <nav class="navbar navbar-default navbar-fixed-bottom" role="navigation">
-        <div class="container">
-            <form class="navbar-form navbar-left navbar-input-group" id="msgFrm" role="search">
-                <div class="form-group">
-                    <input type="text" class="form-control" id="msgTxt" placeholder="在这里输入聊天文字" required="true" autocomplete="off"></input>
-                </div>
-                <span class="input-group">
+            <div class="form-group">
+                <!--<input type="text" class="form-control" id="msgTxt" placeholder="Type your message" />-->
+                <textarea cols="100" id="msgTxt" name="msgTxt" rows="5" style="width:100%;" class="form-control"
+                          placeholder="请通过验证后再输入您要咨询的内容，按ctrl+enter发送"></textarea>
+                <div style="position:absolute;top:119px;left:446px;width:143px;white-space: nowrap;">
+
+                    <input type="button" id="btn_rg" value="在线服务" class="btn btn-default" />
                     <button type="submit" class="btn btn-primary">发送</button>
-                </span>
-            </form>
-        </div>
-    </nav>
 
- -->
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-    var socket = io();
+                </div>
+            </div>
 
-    messages = [];
 
-    ractive = new Ractive({
-      el: 'messages_output',
-      template: '#messages_template',
-      data: { messages: messages }
-    });
 
-    /// 发送！
-    $('#msgFrm').submit(function(event) {
-        var msg = $('#msgTxt').val();
-        $('#msgTxt').val('');
-        var dt = new Date();
-        messages.push({
-            avatar: 'http://pic.baike.soso.com/p/20130309/bki-20130309223642-2077810791.jpg',
-            side: 'right',
-            text: msg,
-        });
-        var data = {
-            FromUserName: '光头强',
-            MsgType: 'text',
-            Content: msg
-        };
-        socket.emit('ImMessage', data);
-        event.preventDefault();
-    });
-
-    /**
-        收到了！
-    */
-    socket.on('ImMessage', function(data){
-        console.log(data);
-        messages.push({
-            side: 'left',
-            text: data.Content,
-            avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
-        });
-    });
-
-    $('#btn_rg').click(function(event){
-        var data = {
-            MsgType: "event.CLICK.RG",
-        };
-        socket.emit('ImMessage', data);
-    });
-
-    
-    </script>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="scripts/jquery.qqFace.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="scripts/chat.js"></script>
 
 </body>
 </html>

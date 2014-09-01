@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <style type="text/css">
+        .logs {
+
+            height: 200px;
+
+            width: 150px;
+            background-color: green;
+            overflow-y: auto;
+
+        }
+    </style>
+</head>
+<body>
+<div id="logs" class="logs"></div>
+
+<input type="button" value="add" id="add"/>
+<script type="text/javascript">
+
+
+    var add1=document.getElementById("add");
+    add1.onclick=function(){
+        var div = document.getElementById('logs');
+        var p = document.createElement(p);
+
+        p.innerHTML = 'this is a log <br />';
+
+        div.appendChild(p);
+        div.scrollTop = div.scrollHeight;
+    }
+
+
+    //让日志scrollbar 滚到底部
+
+
+</script>
+</body>
+</html>

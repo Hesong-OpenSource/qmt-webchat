@@ -1,14 +1,13 @@
 html {
-	height:100%;
+    height: 100%;
 }
 
-
 body {
-/*	font-family: 'Open Sans', Arial, sans-serif;
-	font-weight: 300;
-	font-size: 14px;*/
+    /*	font-family: 'Open Sans', Arial, sans-serif;
+        font-weight: 300;
+        font-size: 14px;*/
     padding-bottom: 70px;
-    height:100%;
+    height: 100%;
 }
 
 .navbar-form {
@@ -16,122 +15,181 @@ body {
     width: 100%;
     vertical-align: middle;
 }
+
 .form-group {
     display: inline-block;
-    width: 80%;
+    width: 99%;
     vertical-align: middle;
 }
+
 .navbar-form .form-control {
     display: inline-block;
     width: 80%;
     vertical-align: middle;
 }
 
-#browser-window{
-	background-image: url("../images/box_background.png");
-	height: 100%;
-	padding: 10px 25px 10px 25px;
-	margin: auto;
+.webchat {
+    width: 600px;
+    height: 600px;
+    position: relative;
+    border: 1px solid #CCCCCC;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
 }
 
-#viewport{
-	overflow:hidden;
-	/*min-height: 100%;*/
-	/*height: 420px;*/
+.divcontent {
+    height: 400px;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    overflow: auto;
+    background-image: url(../images/box_background.png);
+    background-size: 100% 100%;
 }
 
-#viewport-content{
-	position: relative;
-	/*bottom: -500px;*/
+.divform {
+    position: absolute;
+    top: 436px;
 }
 
-.row-chat{
-	position:absolute;
-	bottom: 20px;
-	margin: 0;
-	width: 286px;
+#browser-window {
+
+    height: 100%;
+    padding: 10px 25px 10px 25px;
+    margin: auto;
 }
 
-.bubble-container{
-	display:block;
-	clear: both;
-	position:relative;
-	margin-bottom:10px;
-	min-height: 53px;
+#viewport {
+    overflow: hidden;
+    /*min-height: 100%;*/
+    /*height: 420px;*/
 }
 
-.avatar{
-	border: 2px solid #ffffff;
-	box-sizing: initial;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+#viewport-content {
+    position: relative;
+    /*bottom: -500px;*/
 }
 
-.avatar,.avatar img{
-	width: 50px;
-	height: 50px;
-	-webkit-border-radius: 30px; /* Saf3+, Chrome */
-	border-radius: 30px; /* Opera 10.5, IE 9 */
+.row-chat {
+
+    bottom: 20px;
+    margin: 0;
+    width: 100%;
 }
 
+.bubble-container {
+    display: block;
+    clear: both;
+    position: relative;
+    margin-bottom: 10px;
+    min-height: 53px;
+}
 
-.bubble{
-	padding: 13px;
-	-webkit-border-radius: 3px;
-	-moz-border-radius: 3px;
-	border-radius: 3px;
-	background: rgba(255, 255, 255, 0.9);
-	color: #575858;
-	box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+.avatar {
+    border: 2px solid #ffffff;
+    box-sizing: initial;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+.avatar, .avatar img {
+    width: 50px;
+    height: 50px;
+    -webkit-border-radius: 30px; /* Saf3+, Chrome */
+    border-radius: 30px; /* Opera 10.5, IE 9 */
+}
+
+.bubble {
+    padding: 13px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #575858;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 .avatar-left:before {
-	content: '';
-	position: absolute;
-	border-style: solid;
-	border-width: 10px 14px 10px 0;
-	border-color: transparent #ffffff;
-	display: block;
-	width: 0;
-	z-index: 1;
-	left: 61px;
-	top: 13px;
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 10px 14px 10px 0;
+    border-color: transparent #ffffff;
+    display: block;
+    width: 0;
+    z-index: 1;
+    left: 61px;
+    top: 13px;
 }
 
-.avatar-right:before 
-{
-	content: '';
-	position: absolute;
-	border-style: solid;
-	border-width: 10px 0 10px 14px;
-	border-color: transparent #ffffff;
-	display: block;
-	width: 0;
-	z-index: 1;
-	right: 61px;
-	top: 13px;
+.avatar-right:before {
+    content: '';
+    position: absolute;
+    border-style: solid;
+    border-width: 10px 0 10px 14px;
+    border-color: transparent #ffffff;
+    display: block;
+    width: 0;
+    z-index: 1;
+    right: 61px;
+    top: 13px;
 }
 
 /* Positionning of the avatar and the bubble */
-.avatar-left{
-	float: left;
-	width: 50px;
+.avatar-left {
+    float: left;
+    width: 50px;
 }
 
-.bubble-left{
-	overflow: hidden;
-	margin-left: 75px;
+.bubble-left {
+    overflow: hidden;
+    margin-left: 75px;
 }
 
-.avatar-right{
-	float: right;
-	width: 50px;
+.avatar-right {
+    float: right;
+    width: 50px;
 }
 
-.bubble-right{
-	overflow: hidden;
-	margin-right: 75px;
-/*	float: right;
-	text-align: right;*/
+.bubble-right {
+    overflow: hidden;
+    margin-right: 75px;
+    /*	float: right;
+        text-align: right;*/
 }
 
+span.emotion {
+    width: 42px;
+    height: 20px;
+    background: url(../emoji/icon.gif) no-repeat 2px 2px;
+    padding-left: 20px;
+    cursor: pointer
+}
+
+span.emotion:hover {
+    background-position: 2px -28px
+}
+
+.qqFace {
+    margin-top: 4px;
+    background: #fff;
+    padding: 2px;
+    border: 1px #dfe6f6 solid;
+    position: absolute;
+    z-index: 1000;
+    top: -148px;
+    left: 0px;
+}
+
+.qqFace table td {
+    padding: 0px;
+}
+
+.qqFace table td img {
+    cursor: pointer;
+    border: 1px #fff solid;
+}
+
+.qqFace table td img:hover {
+    border: 1px #0066cc solid;
+}
 
