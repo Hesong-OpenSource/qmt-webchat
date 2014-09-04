@@ -46,7 +46,12 @@ body {
     background-image: url(../images/box_background.png);
     background-size: 100% 100%;
 }
-
+.divcontent_ie8 {
+    height: 400px;
+    background-repeat: no-repeat;
+    overflow: auto;
+    background-image: url(../images/box_background.png);
+}
 .divform {
     position: absolute;
     top: 436px;
@@ -83,6 +88,7 @@ body {
     position: relative;
     margin-bottom: 10px;
     min-height: 53px;
+    padding:10px;/*新添加样式*/
 }
 
 .avatar {
@@ -102,8 +108,9 @@ body {
     padding: 13px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
-    border-radius: 3px;
-    background: rgba(255, 255, 255, 0.9);
+    border-radius:10px;
+    /*background: rgba(255, 255, 255, 0.9);*/
+    background: white;
     color: #575858;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
@@ -113,12 +120,14 @@ body {
     position: absolute;
     border-style: solid;
     border-width: 10px 14px 10px 0;
-    border-color: transparent #ffffff;
+    /*border-color: transparent #ffffff;*/
+    border-color: transparent #CCFF99;
     display: block;
     width: 0;
     z-index: 1;
     left: 61px;
-    top: 13px;
+    /*top: 13px;*//*原有样式*/
+    top:23px;
 }
 
 .avatar-right:before {
@@ -131,7 +140,8 @@ body {
     width: 0;
     z-index: 1;
     right: 61px;
-    top: 13px;
+    /*top: 13px;*//*原有样式*/
+    top:23px;
 }
 
 /* Positionning of the avatar and the bubble */
@@ -143,6 +153,7 @@ body {
 .bubble-left {
     overflow: hidden;
     margin-left: 75px;
+    background-color: #CCFF99;
 }
 
 .avatar-right {
@@ -153,12 +164,30 @@ body {
 .bubble-right {
     overflow: hidden;
     margin-right: 75px;
-    /*	float: right;
-        text-align: right;*/
 }
-
+.bubble-add-right{
+    margin-right: 11px;
+    display: inline;
+    float:right;
+    max-width: 380px;
+    /*white-space:normal;*/
+}
+.bubble-add-left{
+    margin-left: 11px;
+    display: inline;
+    float:left;
+    max-width: 380px;
+    /*white-space:normal;*/
+}
 span.emotion {
     width: 42px;
+    height: 20px;
+    background: url(../emoji/icon.gif) no-repeat 2px 2px;
+    padding-left: 20px;
+    cursor: pointer
+}
+a.uploadimg {
+    width: 120px;
     height: 20px;
     background: url(../emoji/icon.gif) no-repeat 2px 2px;
     padding-left: 20px;

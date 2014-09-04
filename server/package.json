@@ -7,6 +7,10 @@
 		"express" : "*",
 		"body-parser" : "*",
 		"request" : "*",
-		"socket.io" : "*"
+		"socket.io" : "*",
+		"captchapng":"*",
+		"cookie-parser":"*",
+		"express-session":"*",
+		"connect-redis":"*"
 	}
 }
