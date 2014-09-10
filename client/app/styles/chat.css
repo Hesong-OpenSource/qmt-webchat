@@ -9,6 +9,23 @@ body {
     padding-bottom: 70px;
     height: 100%;
 }
+.logo{
+    position: absolute;
+    top: 41px;
+    left: 600px;
+    z-index: 0;
+    width: 221px;
+    height: 601px;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-top-style: solid;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-top-width: 1px;
+    border-right-color: #CCCCCC;
+    border-bottom-color: #CCCCCC;
+    border-top-color: #CCCCCC;
+}
 
 .navbar-form {
     display: inline-block;
@@ -28,14 +45,21 @@ body {
     vertical-align: middle;
 }
 
-.webchat {
+.webchat
+{
     width: 600px;
     height: 600px;
     position: relative;
-    border: 1px solid #CCCCCC;
-    margin-left: auto;
-    margin-right: auto;
     padding: 5px;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    border-left-style: solid;
+    border-right-width: 1px;
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-right-color: #CCCCCC;
+    border-bottom-color: #CCCCCC;
+    border-left-color: #CCCCCC;
 }
 
 .divcontent {
@@ -51,6 +75,14 @@ body {
     background-repeat: no-repeat;
     overflow: auto;
     background-image: url(../images/box_background.png);
+}
+.divLeaveMessage {
+    height: 588px;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    overflow: auto;
+    background-image: url(../images/box_background.png);
+    background-size: 100% 100%;
 }
 .divform {
     position: absolute;
@@ -220,5 +252,24 @@ span.emotion:hover {
 
 .qqFace table td img:hover {
     border: 1px #0066cc solid;
+}
+div.msg{
+    padding: 5px;
+}
+input.msg{
+    width:80%;
+    display: inline;
+    white-space:nowrap;
+    vertical-align:middle;
+}
+
+span.msg{
+    color: #555752;
+    font-size: 14px;
+}
+span.msg_tip{
+    font-weight: bold;
+    color: red;
+    font-size: 16px;
 }
 

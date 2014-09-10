@@ -18,6 +18,7 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
     <script src="emoji/qqemoji_regex.js"></script>
     <link rel="stylesheet" href="emoji/emoji184f03.css">
+
 </head>
 <body>
 <!--[if lt IE 11]>
@@ -39,13 +40,25 @@
 <!--[if !IE]> -->
 <script src="bower_components/ractive/ractive.js"></script>
 <!-- <![endif]-->
-<div class="webchat">
-    <div class="divcontent" id="divcontent">
-        <div id="browser-window">
-            <div id="viewport">
-                <div id="viewport-content">
-                    <div id='messages_output'></div>
-                    <script id='messages_template' type='text/ractive'>
+
+
+<div style="margin-left: auto;margin-right: auto;position: relative; width: 600px;
+    height: 700px;">
+    <div style="float:left;">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab_webchat" data-toggle="tab">在线客服</a></li>
+            <li><a href="#tab_leave_message" data-toggle="tab">在线留言</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="tab_webchat">
+                <div class="webchat">
+                    <div class="divcontent" id="divcontent">
+                        <div id="browser-window">
+                            <div id="viewport">
+                                <div id="viewport-content">
+                                    <div id='messages_output'></div>
+                                    <script id='messages_template' type='text/ractive'>
                     {{#messages}}
                     <div class="bubble-container">
                         <div class="avatar avatar-{{this.side}}"><img src="{{this.avatar}}" /></div>
@@ -55,57 +68,141 @@
                     {{/list}}
 
 
-                    </script>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div style="padding: 2px;">
-        <!--<table cellpadding="0" cellspacing="0">
-            <tr>
-                <td style="width:55%;height: 27px;">
-                    <span class="emotion">表情</span>
-                </td>
-                <td>
-                    <div id="d_captcha">
-                        请输入验证码： <input type="text" id="t_captcha" style="width:60px;" align="right"/> <img
-                            src="/captcha"/>
-                        <input type="button" id="b_captcha" value="确定" class="btn btn-default btn-xs"/>
+
+
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </td>
-            </tr>
-        </table>-->
-        <div style="position: relative; display: inline;">
-            <div style="float: left;width:60px;top:5px; position: absolute;"><span class="emotion" >表情</span></div>
-            <div style="position: absolute; left: 60px; top:5px; width: 150px;">
-                <a href="#" id="upload_img" class='uploadimg'>上传图片</a>
-            </div>
-            <form name="form_captcha" id="form_captcha">
-            <div style="float: right;" id="d_captcha"> 请输入验证码： <input type="text" id="t_captcha" style="width:60px;" align="right"/> <img
-                    src="/captcha"/>
-                <input type="submit" value="确定" class="btn btn-default btn-xs"/></div>
-            </form>
-        </div>
-    </div>
-    <div class="divform">
-        <form class="row row-chat" id="msgFrm">
-            <div class="form-group">
-                <textarea cols="100" id="msgTxt" name="msgTxt" style="width:100%;height:115px;" class="form-control"
-                          placeholder="请通过验证后再输入您要咨询的内容，按ctrl+enter发送"></textarea>
+                    <div style="padding: 2px;">
+                        <div style="position: relative; display: inline;">
+                            <div style="float: left;width:60px;top:5px; position: absolute;"><span
+                                    class="emotion">表情</span>
+                            </div>
+                            <div style="position: absolute; left: 60px; top:5px; width: 150px;">
+                                <a href="#" id="upload_img" class='uploadimg'>上传图片</a>
+                            </div>
+                            <form name="form_captcha" id="form_captcha">
+                                <div style="float: right;" id="d_captcha"> 请输入验证码： <input type="text" id="t_captcha"
+                                                                                          style="width:60px;"
+                                                                                          align="right"/> <img
+                                        src="/captcha"/>
+                                    <input type="submit" value="确定" class="btn btn-default btn-xs"/></div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="divform">
+                        <form class="row row-chat" id="msgFrm">
+                            <div class="form-group">
+                                <textarea cols="100" id="msgTxt" name="msgTxt" style="width:100%;height:115px;"
+                                          class="form-control"
+                                          placeholder="请通过验证后再输入您要咨询的内容，按ctrl+enter发送"></textarea>
 
-                <div style="position:absolute;top:119px;left:446px;width:143px;white-space: nowrap;">
+                                <!--<div style="position:absolute;top:119px;left:530px;width:58px;white-space: nowrap;">-->
+                                <div style="position:absolute;top:119px;left:446px;width:143px;white-space: nowrap;">
+                                    <input type="button" id="btn_rg" value="人工服务" class="btn btn-default"/>
+                                    <button type="submit" class="btn btn-primary">发送</button>
 
-                    <input type="button" id="btn_rg" value="人工服务" class="btn btn-default"/>
-                    <button type="submit" class="btn btn-primary">发送</button>
-
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </form>
+            <div class="tab-pane" id="tab_leave_message">
+                <div class="webchat">
+                    <div class="divLeaveMessage">
+                        <form class="row row-chat" id="msgFrm">
+                            <div class="form-group" style="padding: 10px;">
+                                <div class="msg">
+                                    <span class="msg">联系人</span>
+
+                                    <div>
+                                        <input type="text" class="form-control msg"
+                                               placeholder="请输入您的称呼，最少2个字符，最多32个字符" id="contact"/>
+                                        <span class="msg_tip">*</span>
+                                    </div>
+                                </div>
+                                <div class="msg">
+                                    <span class="msg">回复方式</span>
+                                    <select id="answer_way">
+                                        <option value="email">邮件</option>
+                                        <option value="fax">传真</option>
+                                        <option value="sms">短信</option>
+                                        <option value="tel" selected="selected">电话</option>
+                                    </select>
+                                </div>
+                                <div class="msg">
+                                    <span class="msg">电话号码</span>
+
+                                    <div>
+                                        <input type="text" class="form-control msg"
+                                               placeholder="请输入区号+电话号码，例如：07522026666" id="tel"/>
+                                        <span class="msg_tip" id="tel_tip">*</span>
+                                    </div>
+                                </div>
+                                <div class="msg">
+                                    <span class="msg">邮件</span>
+
+                                    <div>
+                                        <input type="text" class="form-control msg"
+                                               placeholder="我们将使用电子邮件回复您，请留下有效邮件地址" id="mail"/>
+                                        <span class="msg_tip" id="mail_tip" style="display: none">*</span>
+                                    </div>
+                                </div>
+                                <div class="msg">
+                                    <span class="msg">留言主题</span>
+
+                                    <div>
+                                        <input type="text" class="form-control msg"
+                                               placeholder="留言主题最多可输入50个字符" id="subject"/><span class="msg_tip">*</span>
+                                    </div>
+                                </div>
+                                <div class="msg">
+                                    <span class="msg">留言内容</span>
+                                    <div>
+                                        <textarea id="leave_message_content" name="msgTxt"
+                                                  style="height:115px;"
+                                                  class="form-control msg"
+                                                  placeholder="留言内容最多2000个字符"></textarea>
+                                    </div>
+                                </div>
+                                <div class="msg"><span class="msg">标志(*)为必填项目</span></div>
+                                <div class="msg">
+                                    <button type="submit" class="btn btn-primary">提交</button>
+                                    <button type="reset" class="btn">重置</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            $(function () {
+                var log = function (s) {
+                    window.console && console.log(s)
+                }
+                $('.nav-tabs a:first').tab('show')
+                $('a[data-toggle="tab"]').on('show', function (e) {
+                    log(e)
+                })
+                $('a[data-toggle="tab"]').on('shown', function (e) {
+                    log(e.target) // activated tab
+                    log(e.relatedTarget) // previous tab
+                })
+            })
+        </script>
+    </div>
+    <div class="logo">
+        <img src="./images/logo_tcl.png">
     </div>
 </div>
+
 <script type="text/javascript" src="scripts/jquery.qqFace.js"></script>
 <script src="/socket.io/socket.io.js"></script>
-<script  type="text/javascript" src="scripts/upclick-min.js"></script>
+<script type="text/javascript" src="scripts/upclick-min.js"></script>
 <script src="scripts/chat.js"></script>
 
 </body>

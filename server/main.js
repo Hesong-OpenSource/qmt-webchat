@@ -94,6 +94,7 @@ app.use(multer({
 var io_sessions = [];
 var g_session = {};
 var appid = '1002';
+var leave_a_message_appid="1005";
 var appsecret = 'abcdef';
 
 // /// 测试用的首页
@@ -159,6 +160,43 @@ function sendmsg_to_qmt(data, req, res) {
     data.FromUserId = req.sessionID;
     var qmturl = util.format('http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s',
         appid, timestamp, signature);
+    console.log("send to qmt message:", data);
+    console.log("send to qmt url:", qmturl)
+    request.post({
+            uri: qmturl,
+            body: data,
+            json: true
+        },
+        function (error, response, body) {
+            if (error) {
+                res.status(500).send(error);
+                return console.error(error, body);
+            } else {
+                if (body.errcode != 0) {
+                    res.status(500).send(body);
+                    return console.error(body);
+                }
+            }
+            console.log(body);
+            res.status(200).send(JSON.stringify(null));
+        }
+    );
+}
+function leave_a_message_to_qmt(data, req, res) {
+    req.session.touch();
+    var sha1 = crypto.createHash('sha1');
+    sha1.update(leave_a_message_appid);
+    sha1.update(appsecret);
+    var d = new Date();
+    var timestamp = d.getTime().toString();
+    sha1.update(timestamp);
+    var signature = sha1.digest('hex');
+    /// POST 到全媒体 IM WEBAPI
+    // 用 socketio 的 ID 当作 FromUserIDv
+    // var data = req.body;
+    data.FromUserId = req.sessionID;
+    var qmturl = util.format('http://10.4.62.41:8080/leavemessage/api/v1/%s/staffService/message?timestamp=%s&signature=%s',
+        leave_a_message_appid, timestamp, signature);
     console.log("send to qmt message:", data);
     console.log("send to qmt url:", qmturl)
     request.post({
@@ -310,7 +348,6 @@ app.post("/sendmsg", function (req, res, next) {
                 return;
             }
         }
-
         var cTime=new Date();
         if( req.session.last_msg_time){
             var timelen=cTime.getTime()-Date.parse(req.session.last_msg_time);
@@ -322,44 +359,29 @@ app.post("/sendmsg", function (req, res, next) {
         }
         req.session.last_msg_time=cTime;
         sendmsg_to_qmt(req.body, req, res);
-        /*req.session.touch();
-         var sha1 = crypto.createHash('sha1');
-         sha1.update(appid);
-         sha1.update(appsecret);
-         var d = new Date();
-         var timestamp = d.getTime().toString();
-         sha1.update(timestamp);
-         var signature = sha1.digest('hex');
-         /// POST 到全媒体 IM WEBAPI
-         // 用 socketio 的 ID 当作 FromUserIDv
-         var data = req.body;
-         data.FromUserId = req.sessionID;
-         var qmturl = util.format('http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s',
-         appid, timestamp, signature);
-         console.log("send to qmt message:", data);
-         console.log("send to qmt url:", qmturl)
-         request.post({
-         uri: qmturl,
-         body: data,
-         json: true
-         },
-         function (error, response, body) {
-         if (error) {
-         res.status(500).send(error);
-         return console.error(error, body);
-         } else {
-         if (body.errcode != 0) {
-         res.status(500).send(body);
-         return console.error(body);
-         }
-         }
-         console.log(body);
-         res.status(200).send(JSON.stringify(null));
-         }
-         );*/
+
     } else {
         res.status(403).send();
     }
+});
+app.post("/savemessages", function (req, res, next) {
+    if(req.body.Content){
+        if(req.body.Content.length>10000){
+            res.status(200).send(JSON.stringify({desc:"一次发送内容不能超过10000个文字！"}));
+            return;
+        }
+    }
+    var cTime=new Date();
+    if( req.session.last_msg_time){
+        var timelen=cTime.getTime()-Date.parse(req.session.last_msg_time);
+        if(timelen<1000){
+            //TODO:提示客户端间隔
+            res.status(200).send(JSON.stringify({desc:"亲，休息一下吧，您重复提交间隔太快了！"}));
+            return;
+        }
+    }
+    req.session.last_msg_time=cTime;
+    leave_a_message_to_qmt(req.body, req, res);
 });
 app.get("/authed", function (req, res, next) {
     if (req.session.authed) {

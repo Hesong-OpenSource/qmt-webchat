@@ -3,7 +3,7 @@
  */
 
 $(document).ready(function () {
-    if(typeof console=="undefined"){
+    if (typeof console == "undefined") {
 
         console = {
             log: function () {
@@ -36,7 +36,7 @@ $(document).ready(function () {
 
         }
     });
-    function authed(){
+    function authed() {
         var result;
         result = $.ajax({
             url: "/authed",
@@ -63,6 +63,7 @@ $(document).ready(function () {
             }
         });
     }
+
     authed();
     $("#form_captcha").submit(function (event) {
         var result;
@@ -94,7 +95,7 @@ $(document).ready(function () {
         return false;
     });
 
-    function init_sockio(){
+    function init_sockio() {
         socket = io();
         /**
          接收消息
@@ -115,6 +116,7 @@ $(document).ready(function () {
                 avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
             });
         });
+        // reqRG();
     }
 
     ractive = new Ractive({
@@ -153,7 +155,7 @@ $(document).ready(function () {
 
         displayMsg({
             side: 'right',
-            text: reg_email(reg_http( parse_content(msg))),
+            text: reg_email(reg_http(parse_content(msg))),
             avatar: 'http://pic.baike.soso.com/p/20130309/bki-20130309223642-2077810791.jpg'
         });
         var data = {
@@ -172,8 +174,8 @@ $(document).ready(function () {
             contentType: 'application/json; charset=UTF-8',
             timeout: 60000,
             success: function (data, status, xhr) {
-                if(data){
-                    if(data.desc){
+                if (data) {
+                    if (data.desc) {
                         displayMsg({
                             side: 'left',
                             text: data.desc,
@@ -202,7 +204,7 @@ $(document).ready(function () {
 //        return str;
 //    }
 
-    function reg_email(str){
+    function reg_email(str) {
         str = str.replace(/\b(\w+@[\w+\.?]*)/gi,
             "<a href=\"mailto\:$1\" target='_blank '>$1</a>");
         return str;
@@ -223,7 +225,8 @@ $(document).ready(function () {
 
     }
 
-    $('#btn_rg').click(function (event) {
+
+    function reqRG() {
 
         var data = {
             MsgType: "event.CLICK.RG"
@@ -238,8 +241,8 @@ $(document).ready(function () {
             contentType: 'application/json; charset=UTF-8',
             timeout: 60000,
             success: function (data, status, xhr) {
-                if(data){
-                    if(data.desc){
+                if (data) {
+                    if (data.desc) {
                         displayMsg({
                             side: 'left',
                             text: data.desc,
@@ -253,10 +256,14 @@ $(document).ready(function () {
 
             }
         });
+    }
+
+    $('#btn_rg').click(function (event) {
+        reqRG();
         // socket.emit('ImMessage', data);
     });
 
-    $("#open_upload_img").click(function(event){
+    $("#open_upload_img").click(function (event) {
         $("#upload_img").click();
     });
 
@@ -265,28 +272,88 @@ $(document).ready(function () {
         {
             element: "upload_img",
             action: '/uploadfile/',
-            action_params : {},
-            onstart:
-                function(filename)
-                {
-                    console.log("filename is ",filename);
-                },
-            oncomplete:
-                function(response_data)
-                {
-                    var data=response_data=="null"?"上传成功":response_data;
-                    displayMsg({
-                        side: 'left',
-                        text: data,
-                        avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
-                    });
+            action_params: {},
+            onstart: function (filename) {
+                console.log("filename is ", filename);
+            },
+            oncomplete: function (response_data) {
+                var data = response_data == "null" ? "上传成功" : response_data;
+                displayMsg({
+                    side: 'left',
+                    text: data,
+                    avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
+                });
 
-                }
+            }
         });
-    function displayMsg(msg){
+    function displayMsg(msg) {
         messages.push(msg);
         divchat.scrollTop = divchat.scrollHeight;
     }
+
+    $("#answer_way").change(function (event) {
+        if (this.value == "mail") {
+            $("#mail_tip").css({
+                "display": ""
+            });
+            $("#tel_tip").css({
+                "display": "none"
+            });
+        }
+        else {
+            $("#mail_tip").css({
+                "display": "none"
+            });
+            $("#tel_tip").css({
+                "display": ""
+            });
+        }
+    });
+    $("#msgFrm").submit(function (event) {
+        var data={
+            user_id:null,
+            contact:$("#contact").val().trim(),
+            callback:$("#answer_way").val(),
+            tel:$("#tel").val().trim(),
+            email:$("#mail").val().trim(),
+            subject:$("#subject").val(),
+            content:$("#leave_message_content").val(),
+            user_data:{}
+        }
+        var result;
+        result = $.ajax({
+            url: "/savemessages",
+            type: "POST",
+            cache: false,
+            dataType: "json",
+            data: JSON.stringify(data),
+            contentType: 'application/json; charset=UTF-8',
+            timeout: 60000,
+            success: function (data, status, xhr) {
+                if (data) {
+                    if (data.desc) {
+                        displayMsg({
+                            side: 'left',
+                            text: data.desc,
+                            avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
+                        });
+                    }
+                }
+            },
+            error: function (xhr, status, ex) {
+                console.log(ex);
+
+            }
+        });
+        return false;
+    });
+    /* displayMsg(
+     {
+     side: 'left',
+     text: "您好，欢迎进入TCL客户服务中心！",
+     avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
+     }
+     );*/
 });
 
 
