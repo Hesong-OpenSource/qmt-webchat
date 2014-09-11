@@ -197,7 +197,7 @@ function leave_a_message_to_qmt(data, req, res) {
     data.FromUserId = req.sessionID;
     var qmturl = util.format('http://10.4.62.41:8080/leavemessage/api/v1/%s/staffService/message?timestamp=%s&signature=%s',
         leave_a_message_appid, timestamp, signature);
-    console.log("send to qmt message:", data);
+    console.log("send to qmt leave a message:", data);
     console.log("send to qmt url:", qmturl)
     request.post({
             uri: qmturl,
@@ -365,9 +365,9 @@ app.post("/sendmsg", function (req, res, next) {
     }
 });
 app.post("/savemessages", function (req, res, next) {
-    if(req.body.Content){
-        if(req.body.Content.length>10000){
-            res.status(200).send(JSON.stringify({desc:"一次发送内容不能超过10000个文字！"}));
+    if(req.body.content){
+        if(req.body.content.length>2000){
+            res.status(200).send(JSON.stringify({desc:"一次发送内容不能超过2000个文字！"}));
             return;
         }
     }
@@ -384,6 +384,8 @@ app.post("/savemessages", function (req, res, next) {
     leave_a_message_to_qmt(req.body, req, res);
 });
 app.get("/authed", function (req, res, next) {
+
+    req.session.authed=true; //禁用验证码功能，如果需要恢复验证码功能，删除此行即可
     if (req.session.authed) {
         res.status(200).send(JSON.stringify({authed: true}));
     } else {

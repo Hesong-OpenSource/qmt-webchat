@@ -110,13 +110,12 @@ $(document).ready(function () {
             var regN = /\n/g;
             content = content.replace(regR, "<br />").replace(regN, "<br />");
             content = reg_email(content);
-            displayMsg({
-                side: 'left',
-                text: content,
-                avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
-            });
+            displayMsg("left",content);
         });
-        // reqRG();
+        socket.on('connect', function(){
+            reqRG();
+        });
+
     }
 
     ractive = new Ractive({
@@ -152,14 +151,9 @@ $(document).ready(function () {
         }
 
         var dt = new Date();
-
-        displayMsg({
-            side: 'right',
-            text: reg_email(reg_http(parse_content(msg))),
-            avatar: 'http://pic.baike.soso.com/p/20130309/bki-20130309223642-2077810791.jpg'
-        });
+        displayMsg("right",reg_email(reg_http(parse_content(msg))));
         var data = {
-            FromUserName: '光头强',
+            FromUserName: '客户',
             MsgType: 'text',
             Content: msg
         };
@@ -176,11 +170,7 @@ $(document).ready(function () {
             success: function (data, status, xhr) {
                 if (data) {
                     if (data.desc) {
-                        displayMsg({
-                            side: 'left',
-                            text: data.desc,
-                            avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
-                        });
+                        displayMsg("left",data.desc);
                     }
                 }
             },
@@ -243,11 +233,7 @@ $(document).ready(function () {
             success: function (data, status, xhr) {
                 if (data) {
                     if (data.desc) {
-                        displayMsg({
-                            side: 'left',
-                            text: data.desc,
-                            avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
-                        });
+                        displayMsg("left",data.desc);
                     }
                 }
             },
@@ -258,10 +244,10 @@ $(document).ready(function () {
         });
     }
 
-    $('#btn_rg').click(function (event) {
+    /*$('#btn_rg').click(function (event) {
         reqRG();
         // socket.emit('ImMessage', data);
-    });
+    });*/
 
     $("#open_upload_img").click(function (event) {
         $("#upload_img").click();
@@ -278,21 +264,22 @@ $(document).ready(function () {
             },
             oncomplete: function (response_data) {
                 var data = response_data == "null" ? "上传成功" : response_data;
-                displayMsg({
-                    side: 'left',
-                    text: data,
-                    avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
-                });
+                displayMsg("left",data);
 
             }
         });
-    function displayMsg(msg) {
+    function displayMsg(side,data) {
+        var msg={
+            side: side,
+            text: data,
+            avatar: side=="left"?"./images/webchat_avater.png":"./images/client_avater.jpg"
+        }
         messages.push(msg);
         divchat.scrollTop = divchat.scrollHeight;
     }
 
     $("#answer_way").change(function (event) {
-        if (this.value == "mail") {
+        if (this.value == "email") {
             $("#mail_tip").css({
                 "display": ""
             });
@@ -309,17 +296,46 @@ $(document).ready(function () {
             });
         }
     });
-    $("#msgFrm").submit(function (event) {
+    $("#leaveMsgFrm").submit(function (event) {
+        var contact=$("#contact").val().trim();
+        if(contact==""){
+            alert("联系人不能为空");
+            $("#contact").focus();
+            return false;
+        }
+        var callback=$("#answer_way").val();
+        var email=$("#mail").val().trim();
+        var tel=$("#tel").val().trim()
+        if(callback=="email"){
+            if(email==""){
+                alert("邮箱不能为空");
+                $("#mail").focus();
+                return false;
+            }
+        }else{
+            if(tel==""){
+                alert("电话不能为空");
+                $("#tel").focus();
+                return false;
+            }
+        }
+        var subject=$("#subject").val();
+        if(subject==""){
+            alert("留言主题不能为空");
+            $("#subject").focus();
+            return false;
+        }
         var data={
             user_id:null,
-            contact:$("#contact").val().trim(),
-            callback:$("#answer_way").val(),
-            tel:$("#tel").val().trim(),
-            email:$("#mail").val().trim(),
-            subject:$("#subject").val(),
+            contact:contact,
+            callback:callback,
+            tel:tel,
+            email:email,
+            subject:subject,
             content:$("#leave_message_content").val(),
             user_data:{}
         }
+
         var result;
         result = $.ajax({
             url: "/savemessages",
@@ -330,19 +346,10 @@ $(document).ready(function () {
             contentType: 'application/json; charset=UTF-8',
             timeout: 60000,
             success: function (data, status, xhr) {
-                if (data) {
-                    if (data.desc) {
-                        displayMsg({
-                            side: 'left',
-                            text: data.desc,
-                            avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
-                        });
-                    }
-                }
+                $("#leave_msg_reset").click();
             },
             error: function (xhr, status, ex) {
                 console.log(ex);
-
             }
         });
         return false;
