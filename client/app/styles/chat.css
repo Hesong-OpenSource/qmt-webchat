@@ -84,6 +84,12 @@ body {
     background-image: url(../images/box_background.png);
     background-size: 100% 100%;
 }
+.divLeaveMessage_ie8 {
+    height: 588px;
+    background-repeat: no-repeat;
+    overflow: auto;
+    background-image: url(../images/box_background.png);
+}
 .divform {
     position: absolute;
     top: 436px;
@@ -133,6 +139,12 @@ body {
 .avatar, .avatar img {
     width: 50px;
     height: 50px;
+    -webkit-border-radius: 30px; /* Saf3+, Chrome */
+    border-radius: 30px; /* Opera 10.5, IE 9 */
+}
+.avatar, .avatar img.ie {
+    width: 46px;
+    height: 46px;
     -webkit-border-radius: 30px; /* Saf3+, Chrome */
     border-radius: 30px; /* Opera 10.5, IE 9 */
 }
@@ -192,6 +204,7 @@ body {
 .avatar-right {
     float: right;
     width: 50px;
+    height:50px;
 }
 
 .bubble-right {

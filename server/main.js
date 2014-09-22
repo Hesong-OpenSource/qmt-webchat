@@ -94,7 +94,7 @@ app.use(multer({
 var io_sessions = [];
 var g_session = {};
 var appid = '1002';
-var leave_a_message_appid="1005";
+var leave_a_message_appid="1002";
 var appsecret = 'abcdef';
 
 // /// 测试用的首页
@@ -195,7 +195,7 @@ function leave_a_message_to_qmt(data, req, res) {
     // 用 socketio 的 ID 当作 FromUserIDv
     // var data = req.body;
     data.FromUserId = req.sessionID;
-    var qmturl = util.format('http://10.4.62.41:8080/leavemessage/api/v1/%s/staffService/message?timestamp=%s&signature=%s',
+    var qmturl = util.format('http://10.4.62.41:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s',
         leave_a_message_appid, timestamp, signature);
     console.log("send to qmt leave a message:", data);
     console.log("send to qmt url:", qmturl)

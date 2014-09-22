@@ -43,7 +43,7 @@
 <!-- <![endif]-->
 
 
-<div style="margin-left: auto;margin-right: auto;position: relative; width: 600px;">
+<div style="margin-left: auto;margin-right: auto;position: relative; width: 821px;">
     <div style="float:left;">
         <ul class="nav nav-tabs">
             <li class="active"><a href="#tab_webchat" data-toggle="tab">在线客服</a></li>
@@ -60,7 +60,7 @@
                                     <script id='messages_template' type='text/ractive'>
                     {{#messages}}
                     <div class="bubble-container">
-                        <div class="avatar avatar-{{this.side}}"><img src="{{this.avatar}}" /></div>
+                        <div class="avatar avatar-{{this.side}}"><img src="{{this.avatar}}" class="{{this.class_ie}}"/></div>
                         <!--<div class="bubble bubble-{{this.side}}">{{{this.text}}}</div>-->
                         <div class="bubble bubble-{{this.side}} bubble-add-{{this.side}}">{{{this.text}}}</div>
                     </div>
@@ -77,10 +77,10 @@
                     </div>
                     <div style="padding: 2px;">
                         <div style="position: relative; display: inline;">
-                            <div style="float: left;width:60px;top:5px; position: absolute;"><span
+                            <div id="div_face" style="float: left;width:60px;top:5px; position: absolute;"><span
                                     class="emotion">表情</span>
                             </div>
-                            <div style="position: absolute; left: 60px; top:5px; width: 150px;">
+                            <div id="div_upload_img" style="position: absolute; left: 60px; top:5px; width: 150px;">
                                 <a href="#" id="upload_img" class='uploadimg'>上传图片</a>
                             </div>
                             <div style="display: none">
@@ -88,7 +88,7 @@
                                     <div style="float: right;" id="d_captcha"> 请输入验证码： <input type="text" id="t_captcha"
                                                                                               style="width:60px;"
                                                                                               align="right"/> <img
-                                            src="/captcha"/>
+                                            src="../captcha"/>
                                         <input type="submit" value="确定" class="btn btn-default btn-xs"/></div>
                                 </form>
                             </div>
@@ -114,7 +114,7 @@
             </div>
             <div class="tab-pane" id="tab_leave_message">
                 <div class="webchat">
-                    <div class="divLeaveMessage">
+                    <div class="divLeaveMessage" id="divLeaveMessage">
                         <form class="row row-chat" id="leaveMsgFrm">
                             <div class="form-group" style="padding: 10px;">
                                 <div class="msg">
@@ -204,7 +204,7 @@
 </div>
 
 <script type="text/javascript" src="scripts/jquery.qqFace.js"></script>
-<script src="/socket.io/socket.io.js"></script>
+<script src="../socket.io/socket.io.js"></script>
 <script type="text/javascript" src="scripts/upclick-min.js"></script>
 <script src="scripts/chat.js"></script>
 

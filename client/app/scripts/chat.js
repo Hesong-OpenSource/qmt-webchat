@@ -13,10 +13,18 @@ $(document).ready(function () {
         };
     }
     if (!$.support.leadingWhitespace) {
-
+//IE6\7\8
         var d = $("#divcontent");
         d.removeClass("divcontent");
         d.addClass("divcontent_ie8");
+        d=$("#divLeaveMessage");
+        d.removeClass("divLeaveMessage");
+        d.addClass("divLeaveMessage_ie8");
+    }else if ($.support.optSelected && $.support.transition.end=="transitionend"){
+        //火狐
+        $("#div_face").css("top","15px");
+        $("#div_upload_img").css("top","15px");
+
     }
     messages = [];
     var socket = null;
@@ -39,7 +47,7 @@ $(document).ready(function () {
     function authed() {
         var result;
         result = $.ajax({
-            url: "/authed",
+            url: "../authed",
             type: "get",
             cache: false,
             dataType: "json",
@@ -68,7 +76,7 @@ $(document).ready(function () {
     $("#form_captcha").submit(function (event) {
         var result;
         result = $.ajax({
-            url: "/captcha",
+            url: "../captcha",
             type: "POST",
             cache: false,
             dataType: "json",
@@ -96,7 +104,10 @@ $(document).ready(function () {
     });
 
     function init_sockio() {
+       // var socket_url=window.location.origin+"/webchat/socket.io";
+        //socket = io.connect(socket_url);
         socket = io();
+
         /**
          接收消息
          */
@@ -104,11 +115,7 @@ $(document).ready(function () {
             console.log(data);
             var content = parse_content(data.Content);
             console.log(content);
-            var regRN = /\r\n/g;
-            content = content.replace(regRN, "<br />");
-            var regR = /\r/g;
-            var regN = /\n/g;
-            content = content.replace(regR, "<br />").replace(regN, "<br />");
+            content= reg_br(content);
             content = reg_email(content);
             displayMsg("left",content);
         });
@@ -151,7 +158,7 @@ $(document).ready(function () {
         }
 
         var dt = new Date();
-        displayMsg("right",reg_email(reg_http(parse_content(msg))));
+        displayMsg("right",reg_email(reg_http(parse_content(reg_br(msg)))));
         var data = {
             FromUserName: '客户',
             MsgType: 'text',
@@ -160,7 +167,7 @@ $(document).ready(function () {
 
         var result;
         result = $.ajax({
-            url: "/sendmsg",
+            url: "../sendmsg",
             type: "POST",
             cache: false,
             dataType: "json",
@@ -193,7 +200,14 @@ $(document).ready(function () {
 //        str = str.replace(/\[em_([0-9]*)\]/g, '<img src="./' + emoji_pic_path + '$1.png" border="0" />');
 //        return str;
 //    }
-
+    function reg_br(content){
+        var regRN = /\r\n/g;
+        content = content.replace(regRN, "<br />");
+        var regR = /\r/g;
+        var regN = /\n/g;
+        content = content.replace(regR, "<br />").replace(regN, "<br />");
+        return content;
+    }
     function reg_email(str) {
         str = str.replace(/\b(\w+@[\w+\.?]*)/gi,
             "<a href=\"mailto\:$1\" target='_blank '>$1</a>");
@@ -269,10 +283,16 @@ $(document).ready(function () {
             }
         });
     function displayMsg(side,data) {
+        var c="";
+        if(!$.support.optSelected) {
+            //IE11
+            c = "ie";
+        }
         var msg={
             side: side,
             text: data,
-            avatar: side=="left"?"./images/webchat_avater.png":"./images/client_avater.jpg"
+            avatar: side=="left"?"./images/webchat_avater.png":"./images/client_avater.jpg",
+            class_ie:c
         }
         messages.push(msg);
         divchat.scrollTop = divchat.scrollHeight;
@@ -354,13 +374,19 @@ $(document).ready(function () {
         });
         return false;
     });
-    /* displayMsg(
-     {
-     side: 'left',
-     text: "您好，欢迎进入TCL客户服务中心！",
-     avatar: 'http://img0.bdstatic.com/img/image/shouye/mxlss33-11681559436.jpg'
-     }
-     );*/
+/*    $.bind('beforeunload',function(){
+        alert("禁止刷新");
+        return false;
+
+    })*/
+    window.onbeforeunload=function (event){
+        return "关闭或重新加载将导致此次人工服务停止";
+      /*  if(event.clientX>document.body.clientWidth && event.clientY < 0 || event.altKey){
+            alert("你关闭了浏览器");
+        }else{
+            alert("你正在刷新页面");
+        }*/
+    }
 });
 
 
