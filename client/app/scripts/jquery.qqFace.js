@@ -24,7 +24,7 @@
             if ($('#' + id).length <= 0) {
                 strFace = '<div id="' + id + '" class="qqFace">' +
                     '<table border="0" cellspacing="0" cellpadding="0"><tr>';
-                for (var i = 1; i <= 89; i++) {
+                for (var i = 0; i <= 89; i++) {
                    // labFace = '[' + tip + i + ']';
 
                     for (var key in qqemoji_ch_map)
@@ -37,7 +37,7 @@
                     strFace += '<td><img src="' + path + i + '.png" onclick="$(\'#' + option.assign + '\').setCaret();$(\'#' +
                         option.assign + '\').insertAtCaret(\'' +
                         labFace + '\');" /></td>';
-                    if (i % 15 == 0) strFace += '</tr><tr>';
+                    if ((i + 1) % 15 == 0) strFace += '</tr><tr>';
                 }
                 strFace += '</tr></table></div>';
             }

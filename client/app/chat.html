@@ -46,8 +46,8 @@
 <div style="margin-left: auto;margin-right: auto;position: relative; width: 821px;">
     <div style="float:left;">
         <ul class="nav nav-tabs">
-            <li class="active"><a href="#tab_webchat" data-toggle="tab">在线客服</a></li>
-            <li><a href="#tab_leave_message" data-toggle="tab">在线留言</a></li>
+            <li id="webchat_tab" class="active"><a href="#tab_webchat" data-toggle="tab">在线客服</a></li>
+            <li id="lvmsg_tab"><a href="#tab_leave_message" data-toggle="tab">在线留言</a></li>
         </ul>
         <div class="tab-content">
             <div class="tab-pane active" id="tab_webchat">
@@ -58,18 +58,13 @@
                                 <div id="viewport-content">
                                     <div id='messages_output'></div>
                                     <script id='messages_template' type='text/ractive'>
-                    {{#messages}}
-                    <div class="bubble-container">
-                        <div class="avatar avatar-{{this.side}}"><img src="{{this.avatar}}" class="{{this.class_ie}}"/></div>
-                        <!--<div class="bubble bubble-{{this.side}}">{{{this.text}}}</div>-->
-                        <div class="bubble bubble-{{this.side}} bubble-add-{{this.side}}">{{{this.text}}}</div>
-                    </div>
-                    {{/list}}
-
-
-
-
-
+					                    {{#messages}}
+					                    <div class="bubble-container">
+					                        <div class="avatar avatar-{{this.side}}"><img src="{{this.avatar}}" class="{{this.class_ie}}"/></div>
+					                        <!-- <div class="bubble bubble-{{this.side}}">{{{this.text}}}</div> -->
+					                        <div class="bubble bubble-{{this.side}} bubble-add-{{this.side}}">{{{this.text}}}</div>
+					                    </div>
+					                    {{/list}}
                                     </script>
                                 </div>
                             </div>
