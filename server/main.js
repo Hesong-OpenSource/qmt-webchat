@@ -1,3 +1,23 @@
+/** 
+ * 常量
+*/
+var PORT = 1337;
+var REDIS_HOST = '10.4.62.42';
+var REDIS_PORT = 6379;
+var REDIS_DB = 2;
+var IMADAPTER_POST_URL = 'http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s'
+
+/**
+ * 全局变量
+ */
+var appid = 'webchat';
+var leave_a_message_appid="webchat";
+var appsecret = 'abcdef';
+var io_sessions = [];
+var g_session = {};
+
+///////////////////
+
 var util = require('util');
 var crypto = require('crypto');
 
@@ -14,9 +34,9 @@ app.use(cookieParser(cookieSecret));
 var session = require('express-session');
 var RedisStore = require('connect-redis')(session);
 var sessionStore = new RedisStore({
-    host: '10.4.62.42',
-    port: 6379,
-    db: 2
+    host: REDIS_HOST,
+    port: REDIS_PORT,
+    db: REDIS_DB
 });
 app.use(session({
     store: sessionStore,
@@ -88,14 +108,6 @@ app.use(multer({
     }
 }))
 
-/**
- * 全局变量
- */
-var io_sessions = [];
-var g_session = {};
-var appid = '1002';
-var leave_a_message_appid="1002";
-var appsecret = 'abcdef';
 
 // /// 测试用的首页
 // app.get('/', function(req, res) {
@@ -158,8 +170,7 @@ function sendmsg_to_qmt(data, req, res) {
     // 用 socketio 的 ID 当作 FromUserIDv
     // var data = req.body;
     data.FromUserId = req.sessionID;
-    var qmturl = util.format('http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s',
-        appid, timestamp, signature);
+    var qmturl = util.format(IMADAPTER_POST_URL, appid, timestamp, signature);
     console.log("send to qmt message:", data);
     console.log("send to qmt url:", qmturl)
     request.post({
@@ -393,7 +404,6 @@ app.get("/authed", function (req, res, next) {
     }
 });
 app.route('/captcha').get(function (req, res, next) {
-
     if (req.session.captcha_val) {
         console.log('pre-val in session is ', req.session.captcha_val);
     }
@@ -425,8 +435,8 @@ app.route('/captcha').get(function (req, res, next) {
         }
 
     });
-http.listen(3000, function () {
-    console.log('listening on * : 3000');
+http.listen(PORT, function () {
+    console.log('listening on *:' + PORT);
 });
 
 
