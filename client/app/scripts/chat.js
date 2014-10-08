@@ -345,6 +345,22 @@ $(document).ready(function () {
             $("#subject").focus();
             return false;
         }
+        // 格式校验
+        if (email != "") {
+             if (/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/.test(email) === false) {
+                alert("邮箱格式不正确");
+                $("#email").focus();
+                return false;
+            }
+        }
+        if (tel != "") {
+            if (/(^1[3-8][0-9][0-9]{8}$)|(^(0((10)|(2[0-9])|([3-9][0-9]{2})))([2-9][0-9]{6,7})$)/.test(tel) === false) {
+                alert("手机或电话号码格式不正确");
+                $("#tel").focus();
+                return false;
+            }
+        }
+        //
         var data={
             user_id:null,
             contact:contact,
