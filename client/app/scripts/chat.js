@@ -390,6 +390,21 @@ $(document).ready(function () {
         });
         return false;
     });
+
+/**
+*/
+    $("#leave_msg_reset").on("click", function(event) {
+        event.preventDefault();
+        $("#leaveMsgFrm")[0].reset();
+        var selectelement = $("#answer_way")[0];
+        if ("createEvent" in document) {
+            var evt = document.createEvent("HTMLEvents");
+            evt.initEvent("change", false, true);
+            selectelement.dispatchEvent(evt);
+        } else {
+            selectelement.fireEvent("onchange");
+        }
+    });
 /*    $.bind('beforeunload',function(){
         alert("禁止刷新");
         return false;
