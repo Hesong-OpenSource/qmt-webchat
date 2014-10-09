@@ -5,14 +5,14 @@ var PORT = 1337;
 var REDIS_HOST = '10.4.62.42';
 var REDIS_PORT = 6379;
 var REDIS_DB = 2;
-var IMADAPTER_POST_URL = 'http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s'
+var APP_ID = 'webchat';
+var APP_SECRET = 'abcdef';
+var IMADAPTER_POST_URL  = 'http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s';
+var IMADAPTER_LVMSG_URL = 'http://10.4.62.41:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s';
 
 /**
  * 全局变量
  */
-var appid = 'webchat';
-var leave_a_message_appid="webchat";
-var appsecret = 'abcdef';
 var io_sessions = [];
 var g_session = {};
 
@@ -123,8 +123,8 @@ app.post('/qmtapi/staffService/message', function (req, res) {
     // var timestamp = req.query.timestamp;
     // var signature = req.query.signature;
     // var sha1 = crypto.createHash('sha1');
-    // sha1.update(appid);
-    // sha1.update(appsecret);
+    // sha1.update(APP_ID);
+    // sha1.update(APP_SECRET);
     // sha1.update(timestamp);
     // var sig = sha1.digest('hex');
     // if (signature != sig) {
@@ -160,8 +160,8 @@ app.post('/qmtapi/staffService/message', function (req, res) {
 function sendmsg_to_qmt(data, req, res) {
     req.session.touch();
     var sha1 = crypto.createHash('sha1');
-    sha1.update(appid);
-    sha1.update(appsecret);
+    sha1.update(APP_ID);
+    sha1.update(APP_SECRET);
     var d = new Date();
     var timestamp = d.getTime().toString();
     sha1.update(timestamp);
@@ -170,7 +170,7 @@ function sendmsg_to_qmt(data, req, res) {
     // 用 socketio 的 ID 当作 FromUserIDv
     // var data = req.body;
     data.FromUserId = req.sessionID;
-    var qmturl = util.format(IMADAPTER_POST_URL, appid, timestamp, signature);
+    var qmturl = util.format(IMADAPTER_POST_URL, APP_ID, timestamp, signature);
     console.log("send to qmt message:", data);
     console.log("send to qmt url:", qmturl)
     request.post({
@@ -196,8 +196,8 @@ function sendmsg_to_qmt(data, req, res) {
 function leave_a_message_to_qmt(data, req, res) {
     req.session.touch();
     var sha1 = crypto.createHash('sha1');
-    sha1.update(leave_a_message_appid);
-    sha1.update(appsecret);
+    sha1.update(APP_ID);
+    sha1.update(APP_SECRET);
     var d = new Date();
     var timestamp = d.getTime().toString();
     sha1.update(timestamp);
@@ -206,8 +206,7 @@ function leave_a_message_to_qmt(data, req, res) {
     // 用 socketio 的 ID 当作 FromUserIDv
     // var data = req.body;
     data.FromUserId = req.sessionID;
-    var qmturl = util.format('http://10.4.62.41:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s',
-        leave_a_message_appid, timestamp, signature);
+    var qmturl = util.format(IMADAPTER_LVMSG_URL, APP_ID, timestamp, signature);
     console.log("send to qmt leave a message:", data);
     console.log("send to qmt url:", qmturl)
     request.post({
@@ -271,8 +270,8 @@ io.on('connection', function (socket) {
      if(session.authed){
      // 全媒体 IM WEBAPI 的签名
      var sha1 = crypto.createHash('sha1');
-     sha1.update(appid);
-     sha1.update(appsecret);
+     sha1.update(APP_ID);
+     sha1.update(APP_SECRET);
      var d = new Date();
      var timestamp = d.getTime().toString();
      sha1.update(timestamp);
@@ -282,7 +281,7 @@ io.on('connection', function (socket) {
      data.FromUserId = socket.id;
      request.post({
      uri: util.format('http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s',
-     appid, timestamp, signature),
+     APP_ID, timestamp, signature),
      body: data,
      json: true
      },
