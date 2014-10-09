@@ -8,8 +8,16 @@ var REDIS_DB = 2;
 var APP_ID = 'webchat';
 var APP_SECRET = 'abcdef';
 var IMADAPTER_POST_URL  = 'http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s';
+//'http://localhost:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s'; // 
 var IMADAPTER_LVMSG_URL = 'http://10.4.62.41:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s';
-
+// 'http://localhost:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s'; // 
+var FTP_HOST = "10.4.62.41";
+// "10.4.28.64"; 
+var FTP_PORT = 21;
+var FTP_USER = "Administrator";
+//"ftp";// 
+var FTP_PASSWORD = "Ky6241";
+//"Koyoo2864"; // 
 /**
  * 全局变量
  */
@@ -80,14 +88,15 @@ app.use(multer({
                 });
             });
         });
-        ftpclient.on('error', function(){
+        ftpclient.on('error', function(err){
+            console.error("FTP上传错误：" + err);
             // TODO: return 5xx
         });
         ftpclient.connect({
-            host: "10.4.62.41",
-            port: 21,
-            user: "Administrator",
-            password: "Ky6241",
+            host: FTP_HOST,
+            port: FTP_PORT,
+            user: FTP_USER,
+            password: FTP_PASSWORD,
             pasvTimeout: 2000,
             keepalive: 2000
         });
