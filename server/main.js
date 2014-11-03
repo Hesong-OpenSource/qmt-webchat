@@ -1,22 +1,23 @@
-/** 
+
+/**
  * 常量
-*/
+ */
 var PORT = 1337;
-var REDIS_HOST = '10.4.62.42';
+var REDIS_HOST = '10.4.28.63';
 var REDIS_PORT = 6379;
 var REDIS_DB = 2;
 var APP_ID = 'webchat';
 var APP_SECRET = 'abcdef';
-var IMADAPTER_POST_URL  = 'http://10.4.62.41:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s';
-//'http://localhost:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s'; // 
-var IMADAPTER_LVMSG_URL = 'http://10.4.62.41:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s';
-// 'http://localhost:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s'; // 
-var FTP_HOST = "10.4.62.41";
-// "10.4.28.64"; 
+var IMADAPTER_POST_URL  = 'http://10.4.62.42:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s';
+//'http://localhost:8080/weChatAdapter/api/v1/%s/staffService/message?timestamp=%s&signature=%s'; //
+var IMADAPTER_LVMSG_URL = 'http://10.4.62.42:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s';
+// 'http://localhost:8080/weChatAdapter/api/v1/%s/leavemessage?timestamp=%s&signature=%s'; //
+var FTP_HOST = "10.4.28.64";
+// "10.4.28.64";
 var FTP_PORT = 21;
-var FTP_USER = "Administrator";
-//"ftp";// 
-var FTP_PASSWORD = "Ky6241";
+var FTP_USER = "ftp";
+//"ftp";//
+var FTP_PASSWORD = "koyoo2864";
 //"Koyoo2864"; // 
 /**
  * 全局变量
@@ -128,18 +129,7 @@ app.use(multer({
 /// 接收QMT IM消息，并发往浏览器。
 app.post('/qmtapi/staffService/message', function (req, res) {
     console.log('Recv FROM QMT: ', req.get('Content-Type'), req.query, req.body);
-    /// 验证
-    // var timestamp = req.query.timestamp;
-    // var signature = req.query.signature;
-    // var sha1 = crypto.createHash('sha1');
-    // sha1.update(APP_ID);
-    // sha1.update(APP_SECRET);
-    // sha1.update(timestamp);
-    // var sig = sha1.digest('hex');
-    // if (signature != sig) {
-    //     res.send(403);
-    //     return;
-    // }
+
     /// 转发
     var data = req.body;
     var sid = data.ToUserId;
@@ -167,6 +157,17 @@ app.post('/qmtapi/staffService/message', function (req, res) {
 
 
 function sendmsg_to_qmt(data, req, res) {
+    console.log("req.originalUrl:",req.originalUrl);
+    if (req.originalUrl=="/sendmsg_kyh"){
+
+        APP_ID="kyh";
+        APP_SECRET="abcdef";
+    }else{
+        APP_ID="webchat";
+        APP_SECRET="abcdef";
+    }
+    console.log("APP_ID is :",APP_ID);
+    console.log("APP_SECRET is:",APP_SECRET);
     req.session.touch();
     var sha1 = crypto.createHash('sha1');
     sha1.update(APP_ID);
@@ -360,6 +361,30 @@ app.post("/uploadfile", function (req, res, next) {
 
 });
 app.post("/sendmsg", function (req, res, next) {
+    if (req.session.authed) {
+        if(req.body.Content){
+            if(req.body.Content.length>500){
+                res.status(200).send(JSON.stringify({desc:"一次发送内容不能超过500个文字！"}));
+                return;
+            }
+        }
+        var cTime=new Date();
+        if( req.session.last_msg_time){
+            var timelen=cTime.getTime()-Date.parse(req.session.last_msg_time);
+            if(timelen<1000){
+                //TODO:提示客户端间隔
+                res.status(200).send(JSON.stringify({desc:"亲，别急，喝口茶先！"}));
+                return;
+            }
+        }
+        req.session.last_msg_time=cTime;
+        sendmsg_to_qmt(req.body, req, res);
+
+    } else {
+        res.status(403).send();
+    }
+});
+app.post("/sendmsg_kyh", function (req, res, next) {
     if (req.session.authed) {
         if(req.body.Content){
             if(req.body.Content.length>500){
