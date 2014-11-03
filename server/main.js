@@ -3,7 +3,8 @@
  * 常量
  */
 var PORT = 1337;
-var REDIS_HOST = '10.4.28.63';
+//var REDIS_HOST = '10.4.28.63';
+var REDIS_HOST = '192.168.100.101';
 var REDIS_PORT = 6379;
 var REDIS_DB = 2;
 var APP_ID = 'webchat';
