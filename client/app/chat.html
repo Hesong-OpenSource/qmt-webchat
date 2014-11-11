@@ -43,7 +43,7 @@
 <!-- <![endif]-->
 
 
-<div style="margin-left: auto;margin-right: auto;position: relative; width: 821px;">
+<div style="margin-left: auto;margin-right: auto;position: relative; width: 600px;" id="div_border">
     <div style="float:left;">
         <ul class="nav nav-tabs">
             <li id="webchat_tab" class="active"><a href="#tab_webchat" data-toggle="tab">在线客服</a></li>
@@ -99,7 +99,7 @@
                                 <div style="position:absolute;top:119px;left:530px;width:58px;white-space: nowrap;">
                                 <!--<div style="position:absolute;top:119px;left:446px;width:143px;white-space: nowrap;">-->
                                     <!--<input type="button" id="btn_rg" value="人工服务" class="btn btn-default"/>-->
-                                    <button type="submit" class="btn btn-primary">发送</button>
+                                    <button type="submit" class="btn btn-primary" id="b_sendMsg">发送</button>
 
                                 </div>
                             </div>
@@ -193,8 +193,9 @@
             })
         </script>
     </div>
-    <div class="logo">
-        <img src="./images/logo_tcl.png">
+    <div class="logo" id="div_logo" style="display: none;">
+        <!--<img id="img_logo" src="./logo/logo_tcl.png">-->
+        <img id="img_logo" src="">
     </div>
 </div>
 

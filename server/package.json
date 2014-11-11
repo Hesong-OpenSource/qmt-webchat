@@ -13,6 +13,7 @@
     "express-session": "*",
     "connect-redis": "*",
     "ftp": "~0.3.7",
-    "multer": "~0.1.4"
+    "multer": "~0.1.4",
+    "mysql":"*"
   }
 }

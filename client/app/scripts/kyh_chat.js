@@ -40,14 +40,56 @@ $(document).ready(function () {
 
     $("body").keydown(function (event) {
         if (event.ctrlKey && event.keyCode == '13') {
-            sendmsg_kyh();
+            sendmsg();
 
         }
     });
+    //获取url参数
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+    //显示logo函数
+    function display_logo(logo) {
+        var display = getQueryString("logo");
+        if (display == "0") {
+            $("#div_border")[0].style.width = "600px";
+            $("#div_logo")[0].style.display = "none";
+        }
+        else {
+            if (logo != "" && logo != null) {
+                var logo_arr = logo.split("../..");
+                if (logo_arr.length > 1) {
+                    logo = logo_arr[1];
+                    $("#div_border")[0].style.width = "821px";
+                    $("#div_logo")[0].style.display = "";
+                    $("#img_logo")[0].src = logo;
+                }
+            }
+        }
+    }
+    var printMsg=true;
+    //显示工作时间函数
+    function display_work_style(work_begintime_str, work_endtime_str) {
+        var nTime = new Date();
+        var nDay=nTime.getFullYear()+"-"+(parseInt(nTime.getMonth())+1)+"-"+nTime.getDate()+" ";
+        var work_begintime =new Date(nDay + work_begintime_str);
+        var work_endtime = new Date(nDay + work_endtime_str);
+
+
+        if(work_begintime>nTime||nTime>work_endtime){
+            displayMsg("left", "亲，现在是人工客服非上班时间，请在留言页面提交您的问题或建议");
+            $("#b_sendMsg")[0].disabled=true;
+            printMsg=false;
+        }
+    }
     function authed() {
+
         var result;
         result = $.ajax({
-            url: "../authed",
+            url: "../authed?accname=kyh",
             type: "get",
             cache: false,
             dataType: "json",
@@ -56,13 +98,22 @@ $(document).ready(function () {
             success: function (data, status, xhr) {
                 if (data.authed) {
                     $("#d_captcha")[0].style.display = "none";
-                    init_sockio();
+
+                    display_logo(data.logo);
+                    display_work_style(data.work_begintime, data.work_endtime);
+                    if(printMsg){
+                        init_sockio();
+                    }
+
                     tip("请输入您要咨询的问题，按ctrl+enter发送");
                 } else {
                     $("#d_captcha")[0].style.display = "";
-                    tip("请通过验证后再输入您要咨询的内容，按ctrl+enter发送");
+                    if (data.desc) {
+                        tip(data.desc);
+                    } else {
+                        tip("请通过验证后再输入您要咨询的内容，按ctrl+enter发送");
+                    }
                     $("#t_captcha")[0].focus();
-
                 }
             },
             error: function (xhr, status, ex) {
@@ -138,11 +189,11 @@ $(document).ready(function () {
 
 /// 发送消息
     $('#msgFrm').submit(function (event) {
-        sendmsg_kyh();
+        sendmsg();
         //    event.preventDefault();
         return false;
     });
-    var sendmsg_kyh = function () {
+    var sendmsg = function () {
         if (!socket) {
             tip("请验证通过后再咨询");
             $("#t_captcha")[0].focus();
@@ -167,7 +218,7 @@ $(document).ready(function () {
 
         var result;
         result = $.ajax({
-            url: "../sendmsg_kyh",
+            url: "../sendmsg",
             type: "POST",
             cache: false,
             dataType: "json",
@@ -237,7 +288,7 @@ $(document).ready(function () {
         };
         var result;
         result = $.ajax({
-            url: "/sendmsg_kyh",
+            url: "/sendmsg",
             type: "POST",
             cache: false,
             dataType: "json",
