@@ -1,7 +1,9 @@
 /**
  * Created by user on 2014/8/30.
+ 使用方法：http://domain/app/chat.html?accname=appname
  */
-
+var img_http_url;
+var divchat;
 $(document).ready(function () {
     if (typeof console == "undefined") {
 
@@ -28,7 +30,7 @@ $(document).ready(function () {
     }
     messages = [];
     var socket = null;
-    var divchat = $("#divcontent")[0];
+   divchat = $("#divcontent")[0];
     var send_msg_box = $('#msgTxt');
     var emoji_pic_path = 'emoji/qqemoji/';
 
@@ -71,27 +73,28 @@ $(document).ready(function () {
             }
         }
     }
-    var printMsg=true;
+
+    var printMsg = true;
     //显示工作时间函数
     function display_work_style(work_begintime_str, work_endtime_str) {
         var nTime = new Date();
-        var nDay=nTime.getFullYear()+"-"+(parseInt(nTime.getMonth())+1)+"-"+nTime.getDate()+" ";
-        var work_begintime =new Date(nDay + work_begintime_str);
+        var nDay = nTime.getFullYear() + "-" + (parseInt(nTime.getMonth()) + 1) + "-" + nTime.getDate() + " ";
+        var work_begintime = new Date(nDay + work_begintime_str);
         var work_endtime = new Date(nDay + work_endtime_str);
 
 
-        if(work_begintime>nTime||nTime>work_endtime){
+        if (work_begintime > nTime || nTime > work_endtime) {
             displayMsg("left", "亲，现在是人工客服非上班时间，请在留言页面提交您的问题或建议");
-            $("#b_sendMsg")[0].disabled=true;
-            printMsg=false;
+            $("#b_sendMsg")[0].disabled = true;
+            printMsg = false;
         }
     }
 
     function authed() {
         var appname = getQueryString("appname")
 
-        if (appname == null||appname=="") {
-            appname="webchat";
+        if (appname == null || appname == "") {
+            appname = "webchat";
 
         }
 
@@ -104,12 +107,16 @@ $(document).ready(function () {
             contentType: 'application/json; charset=UTF-8',
             timeout: 60000,
             success: function (data, status, xhr) {
+                if (data.error) {
+                    displayMsg("left", data.error);
+                    return;
+                }
                 if (data.authed) {
                     $("#d_captcha")[0].style.display = "none";
-
+                    img_http_url = data.img_http_url;
                     display_logo(data.logo);
                     display_work_style(data.work_begintime, data.work_endtime);
-                    if(printMsg){
+                    if (printMsg) {
                         init_sockio();
                     }
 
@@ -163,8 +170,7 @@ $(document).ready(function () {
     });
 
     function init_sockio() {
-        // var socket_url=window.location.origin+"/webchat/socket.io";
-        //socket = io.connect(socket_url);
+
         socket = io();
 
         /**
@@ -172,11 +178,17 @@ $(document).ready(function () {
          */
         socket.on('ImMessage', function (data) {
             console.log(data);
-            var content = parse_content(data.Content);
-            console.log(content);
-            content = reg_br(content);
-            content = reg_email(content);
-            displayMsg("left", content);
+            var content = "";
+            if (data.MsgType == "text") {
+                content = parse_content(data.Content);
+                console.log(content);
+                content = reg_br(content);
+                content = reg_email(content);
+            } else if (data.MsgType == "image") {
+                content = "<img src='" + img_http_url + data.Content + "' style='max-width:200px;'/>";
+            }
+            var dir=data.Dir||"left";
+            displayMsg(dir, content);
         });
         socket.on('connect', function () {
             reqRG();
@@ -337,9 +349,23 @@ $(document).ready(function () {
                 console.log("filename is ", filename);
             },
             oncomplete: function (response_data) {
-                var data = response_data == "null" ? "上传成功" : response_data;
-                displayMsg("left", data);
-
+                //var data = response_data == "null" ? "上传成功" : response_data;
+                /*var data
+                 if(response_data){
+                 if(response_data.imageurl){
+                 data ="<img src='"+response_data.imageurl+"' style='max-width:200px;' />"
+                 }else{
+                 data ="上传失败";
+                 }
+                 }else{
+                 data = "上传失败";
+                 }*/
+                if(response_data!="null"){
+                    var d=JSON.parse(response_data);
+                    if(d.error){
+                        displayMsg("left",d.error);
+                    }
+                }
             }
         });
     function displayMsg(side, data) {

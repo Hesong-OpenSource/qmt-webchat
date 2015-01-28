@@ -164,11 +164,17 @@ $(document).ready(function () {
          */
         socket.on('ImMessage', function (data) {
             console.log(data);
-            var content = parse_content(data.Content);
-            console.log(content);
-            content= reg_br(content);
-            content = reg_email(content);
-            displayMsg("left",content);
+            var content="";
+            if(data.MsgType=="text"){
+                content = parse_content(data.Content);
+                console.log(content);
+                content = reg_br(content);
+                content = reg_email(content);
+            }else if(data.MsgType=="image"){
+                content="<img src='"+img_http_url+data.Content+"' style='max-width:200px;'/>";
+            }
+            var dir=data.Dir||"left";
+            displayMsg(dir, content);
         });
         socket.on('connect', function(){
             reqRG();
@@ -328,8 +334,9 @@ $(document).ready(function () {
                 console.log("filename is ", filename);
             },
             oncomplete: function (response_data) {
-                var data = response_data == "null" ? "上传成功" : response_data;
-                displayMsg("left",data);
+                if(response_data!="null"){
+                    displayMsg("left",response_data);
+                }
 
             }
         });

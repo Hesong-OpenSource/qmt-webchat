@@ -1,0 +1,26 @@
+{
+    "appenders": [
+        {
+            "type": "file",
+            "filename": "./logs/webchat.log",
+            "maxLogSize": 20480,
+            "backups": 3,
+            "layout": {
+                "type": "pattern",
+                "pattern": "%d %p - %m %n"
+            }
+        },
+        {
+            "type": "console",
+            "layout": {
+                "type": "pattern",
+                "pattern": "%d %p - %m %n"
+            }
+        }
+    ],
+    "levels": {
+        "[all]": "DEBUG",
+        "relative-logger": "DEBUG",
+        "console": "TRACE"
+    }
+}
